@@ -51,12 +51,12 @@ class RedactingFormatter(logging.Formatter):
                             original_message, self.SEPARATOR)
 
 
-PII_FIELDS = ("name", "email", "phone", "ssn", "password")
+PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 
 
 def get_logger() -> logging.Logger:
     """
-    Creates and returns a logger named with specific settings.
+    Creates and returns a logger with specific settings.
     """
     logger = logging.getLogger("user_data")
     logger.setLevel(logging.INFO)
@@ -86,3 +86,20 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         host=host,
         database=database
     )
+
+
+def main():
+    """Retrieve and log all rows from the users table."""
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users;")
+
+    logger = get_logger()
+
+    for row in cursor:
+        message = '; '.join(f"{key}={value}" for key,
+                            value in row.items())
+        logger.info(message)
+
+    cursor.close()
+    db.close()
