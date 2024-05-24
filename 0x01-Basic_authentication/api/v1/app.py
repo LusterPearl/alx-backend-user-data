@@ -16,8 +16,7 @@ app.register_blueprint(app_views)
 
 
 auth = None
-auth_type = getenv("AUTH_TYPE")
-if auth_type == "basic_auth":
+if getenv("AUTH_TYPE") == "basic_auth":
     auth = BasicAuth()
 else:
     auth = Auth()
