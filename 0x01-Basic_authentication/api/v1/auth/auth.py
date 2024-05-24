@@ -8,7 +8,17 @@ from flask import request
 class Auth:
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """Check if a path requires authentication."""
-        return False
+        if not path:
+            return True
+        
+        if not excluded_paths or not isinstance(excluded_paths, list):
+            return True
+        
+        for excluded_path in excluded_paths:
+            if path.rstrip('/') == excluded_path.rstrip('/'):
+                return False
+        
+        return True
 
     def authorization_header(self, request=None) -> str:
         """Get the authorization header from the request."""
