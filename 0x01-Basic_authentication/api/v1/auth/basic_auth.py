@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """BasicAuth class and update the app"""
 
+from typing import TypeVar, List
 from api.v1.auth.auth import Auth
-from typing import TypeVar
 
 
 class BasicAuth(Auth):
@@ -27,7 +27,7 @@ class BasicAuth(Auth):
         try:
             decoded_bytes = base64.b64decode(base64_authorization_header)
             return decoded_bytes.decode('utf-8')
-        except:
+        except Exception as e:
             return None
 
     
@@ -35,7 +35,7 @@ class BasicAuth(Auth):
         """Extract user email and password from decoded Base64"""
         if decoded_base64_authorization_header is None or not isinstance(decoded_base64_authorization_header, str):
             return None, None
-        parts = decoded_base64_authorization_header.rsplit(':', 1)
+        parts = decoded_base64_authorization_header.split(':', 1)
         if len(parts) != 2:
             return None, None
         
@@ -84,3 +84,17 @@ class BasicAuth(Auth):
             return None
 
         return self.user_object_from_credentials(user_email, user_pwd)
+
+
+    def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
+        """Check if a path requires authentication."""
+        if path is None or not isinstance(path, str) or excluded_paths is None or not all(isinstance(p, str) for p in excluded_paths):
+            return True
+
+        for excluded_path in excluded_paths:
+            if excluded_path.endswith("*") and path.startswith(excluded_path[:-1]):
+                return False
+            elif path == excluded_path:
+                return False
+
+        return True
