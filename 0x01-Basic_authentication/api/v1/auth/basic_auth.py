@@ -31,15 +31,15 @@ class BasicAuth(Auth):
             return None
 
     
-    def extract_user_credentials(self, decoded_base64_authorization_header: str) -> (str, str):
-        """Extract user email and password from decoded Base64 header."""
+    def extract_user_credentials(self, decoded_base64_authorization_header) -> (str, str):
+        """Extract user email and password from decoded Base64"""
         if decoded_base64_authorization_header is None or not isinstance(decoded_base64_authorization_header, str):
             return None, None
-
-        if ':' not in decoded_base64_authorization_header:
+        parts = decoded_base64_authorization_header.rsplit(':', 1)
+        if len(parts) != 2:
             return None, None
-
-        user_email, user_password = decoded_base64_authorization_header.split(':', 1)
+        
+        user_email, user_password = parts
         return user_email, user_password
 
     
