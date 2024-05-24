@@ -17,7 +17,7 @@ def unauthorized_endpoint():
 def stats() -> str:
     """ GET /api/v1/stats
     Return:
-      - the number of each objects
+    the number of each objects
     """
     from models.user import User
     stats = {}
