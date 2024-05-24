@@ -10,6 +10,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
+app.register_blueprint(app_views)
 
 
 @app.errorhandler(401)
@@ -17,7 +18,12 @@ def unauthorized(error):
     """Handle unauthorized errors."""
     return jsonify({"error": "Unauthorized"}), 401
 
-app.register_blueprint(app_views)
+
+@app.errorhandler(403)
+def forbidden(error):
+    """Return a JSON response for forbidden errors."""
+    return jsonify({"error": "Forbidden"}), 403
+
 
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
