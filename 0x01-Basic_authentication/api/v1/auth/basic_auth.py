@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
-"""BasicAuth class and update the app"""
+"""BasicAuth class for basic HTTP authentication."""
 
 from typing import TypeVar, List
 from api.v1.auth.auth import Auth
 
 
 class BasicAuth(Auth):
-    def extract_base64_authorization_header(
-        self, authorization_header: str) -> str:
-        """Extract the Base64 part of the Authorization."""
+    """BasicAuth class that extends the Auth class for basic"""
+    
+    def extract_base64_authorization_header(self, authorization_header: str) -> str:
+        """Extract the Base64 part of the Authorization header.
+        
+        Args:
+            authorization_header (str): The Authorization header.
+        
+        Returns:
+            str: The Base64 part of the Authorization header, or None if invalid.
+        """
         if authorization_header is None or not isinstance(authorization_header, str):
             return None
 
@@ -18,7 +26,14 @@ class BasicAuth(Auth):
         return authorization_header.split(" ")[1]
 
     def decode_base64_authorization_header(self, base64_authorization_header: str) -> str:
-        """Decode a Base64 Authorization header."""
+        """Decode a Base64 Authorization header.
+        
+        Args:
+            base64_authorization_header (str).
+        
+        Returns:
+            str: The decoded Authorization header, or None if invalid.
+        """
         import base64
 
         if base64_authorization_header is None or not isinstance(base64_authorization_header, str):
@@ -30,8 +45,15 @@ class BasicAuth(Auth):
         except Exception as e:
             return None
 
-    def extract_user_credentials(self, decoded_base64_authorization_header) -> (str, str):
-        """Extract user email and password from decoded Base64"""
+    def extract_user_credentials(self, decoded_base64_authorization_header: str) -> (str, str):
+        """Extract user email and password from the decoded.
+        
+        Args:
+            decoded_base64_authorization_header (str.
+        
+        Returns:
+            tuple: The user email and password, or (None, None) if invalid.
+        """
         if decoded_base64_authorization_header is None or not isinstance(decoded_base64_authorization_header, str):
             return None, None
         parts = decoded_base64_authorization_header.split(':', 1)
@@ -42,7 +64,15 @@ class BasicAuth(Auth):
         return user_email, user_password
 
     def user_object_from_credentials(self, user_email: str, user_pwd: str) -> TypeVar('User'):
-        """Retrieve User instance based on email and password."""
+        """Retrieve User instance based on email and password.
+        
+        Args:
+            user_email (str): The user's email.
+            user_pwd (str): The user's password.
+        
+        Returns:
+            User: The User instance if valid, otherwise None.
+        """
         if user_email is None or not isinstance(user_email, str):
             return None
 
@@ -60,7 +90,14 @@ class BasicAuth(Auth):
         return user
 
     def current_user(self, request=None) -> TypeVar('User'):
-        """Retrieve the User instance for a request."""
+        """Retrieve the User instance for a request.
+        
+        Args:
+            request: The request object.
+        
+        Returns:
+            User: The User instance if valid, otherwise None.
+        """
         if request is None:
             return None
 
@@ -83,7 +120,15 @@ class BasicAuth(Auth):
         return self.user_object_from_credentials(user_email, user_pwd)
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """Check if a path requires authentication."""
+        """Check if a path requires authentication.
+        
+        Args:
+            path (str): The path to check.
+            excluded_paths (List[str]): A list of paths.
+        
+        Returns:
+            bool: True if the path requires authentication.
+        """
         if path is None or not isinstance(path, str) or excluded_paths is None or not all(isinstance(p, str) for p in excluded_paths):
             return True
 

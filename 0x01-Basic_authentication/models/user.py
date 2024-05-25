@@ -6,8 +6,8 @@ from models.base import Base
 
 
 class User(Base):
-    """ User class
-    """
+    """BasicAuth class that extends the Auth class
+      for basic HTTP authentication"""
 
     def __init__(self, *args: list, **kwargs: dict):
         """ Initialize a User instance

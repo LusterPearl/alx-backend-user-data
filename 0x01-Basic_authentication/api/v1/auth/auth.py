@@ -6,6 +6,7 @@ from flask import request
 
 
 class Auth:
+    """BasicAuth class that extends the Auth class for basic"""
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """Check if a path requires authentication."""
         if not path:
