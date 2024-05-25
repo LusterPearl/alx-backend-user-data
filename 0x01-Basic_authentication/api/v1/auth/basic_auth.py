@@ -6,14 +6,11 @@ from api.v1.auth.auth import Auth
 
 
 class BasicAuth(Auth):
-    """BasicAuth class that extends the Auth class for basic"""
-    
+    """BasicAuth class that extends the Auth class for basic"""    
     def extract_base64_authorization_header(self, authorization_header: str) -> str:
         """Extract the Base64 part of the Authorization header.
-        
         Args:
             authorization_header (str): The Authorization header.
-        
         Returns:
             str: The Base64 part of the Authorization header, or None if invalid.
         """
@@ -26,11 +23,9 @@ class BasicAuth(Auth):
         return authorization_header.split(" ")[1]
 
     def decode_base64_authorization_header(self, base64_authorization_header: str) -> str:
-        """Decode a Base64 Authorization header.
-        
+        """Decode a Base64 Authorization header  
         Args:
             base64_authorization_header (str).
-        
         Returns:
             str: The decoded Authorization header, or None if invalid.
         """
@@ -46,11 +41,9 @@ class BasicAuth(Auth):
             return None
 
     def extract_user_credentials(self, decoded_base64_authorization_header: str) -> (str, str):
-        """Extract user email and password from the decoded.
-        
+        """Extract user email and password from the decoded 
         Args:
-            decoded_base64_authorization_header (str.
-        
+            decoded_base64_authorization_header
         Returns:
             tuple: The user email and password, or (None, None) if invalid.
         """
@@ -65,11 +58,9 @@ class BasicAuth(Auth):
 
     def user_object_from_credentials(self, user_email: str, user_pwd: str) -> TypeVar('User'):
         """Retrieve User instance based on email and password.
-        
         Args:
             user_email (str): The user's email.
             user_pwd (str): The user's password.
-        
         Returns:
             User: The User instance if valid, otherwise None.
         """
@@ -90,11 +81,9 @@ class BasicAuth(Auth):
         return user
 
     def current_user(self, request=None) -> TypeVar('User'):
-        """Retrieve the User instance for a request.
-        
+        """Retrieve the User instance for a request    
         Args:
-            request: The request object.
-        
+            request: The request object
         Returns:
             User: The User instance if valid, otherwise None.
         """
@@ -120,12 +109,10 @@ class BasicAuth(Auth):
         return self.user_object_from_credentials(user_email, user_pwd)
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """Check if a path requires authentication.
-        
+        """Check if a path requires 
         Args:
             path (str): The path to check.
             excluded_paths (List[str]): A list of paths.
-        
         Returns:
             bool: True if the path requires authentication.
         """
