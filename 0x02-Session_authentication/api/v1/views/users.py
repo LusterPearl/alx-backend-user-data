@@ -4,13 +4,14 @@
 from api.v1.views import app_views
 from flask import abort, jsonify, request
 from models.user import User
+from models import storage
 
 
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
 def view_all_users() -> str:
     """ GET /api/v1/users
     Return:
-      - list of all User objects JSON represented
+      list of all User objects JSON represented
     """
     all_users = [user.to_json() for user in User.all()]
     return jsonify(all_users)
@@ -20,10 +21,10 @@ def view_all_users() -> str:
 def view_one_user(user_id: str = None) -> str:
     """ GET /api/v1/users/:id
     Path parameter:
-      - User ID
+      User ID
     Return:
-      - User object JSON represented
-      - 404 if the User ID doesn't exist
+      User object JSON represented
+      404 if the User ID doesn't exist
     """
     if user_id is None:
         abort(404)
@@ -37,10 +38,10 @@ def view_one_user(user_id: str = None) -> str:
 def delete_user(user_id: str = None) -> str:
     """ DELETE /api/v1/users/:id
     Path parameter:
-      - User ID
+      User ID
     Return:
-      - empty JSON is the User has been correctly deleted
-      - 404 if the User ID doesn't exist
+      empty JSON is the User has been correctly deleted
+      404 if the User ID doesn't exist
     """
     if user_id is None:
         abort(404)
@@ -55,13 +56,13 @@ def delete_user(user_id: str = None) -> str:
 def create_user() -> str:
     """ POST /api/v1/users/
     JSON body:
-      - email
-      - password
-      - last_name (optional)
-      - first_name (optional)
+      email
+      password
+      last_name (optional)
+      first_name (optional)
     Return:
-      - User object JSON represented
-      - 400 if can't create the new User
+      User object JSON represented
+      400 if can't create the new User
     """
     rj = None
     error_msg = None
@@ -93,14 +94,14 @@ def create_user() -> str:
 def update_user(user_id: str = None) -> str:
     """ PUT /api/v1/users/:id
     Path parameter:
-      - User ID
+      User ID
     JSON body:
-      - last_name (optional)
-      - first_name (optional)
+      last_name (optional)
+      first_name (optional)
     Return:
-      - User object JSON represented
-      - 404 if the User ID doesn't exist
-      - 400 if can't update the User
+      User object JSON represented
+      404 if the User ID doesn't exist
+      400 if can't update the User
     """
     if user_id is None:
         abort(404)
@@ -120,3 +121,17 @@ def update_user(user_id: str = None) -> str:
         user.last_name = rj.get('last_name')
     user.save()
     return jsonify(user.to_json()), 200
+
+
+@app_views.route('/api/v1/users/<user_id>', methods=['GET'], strict_slashes=False)
+def get_user(user_id):
+    """Get a user by ID or 'me'."""
+    if user_id == "me":
+        if request.current_user is None:
+            abort(404)
+        return jsonify(request.current_user.to_dict())
+    
+    user = storage.get(User, user_id)
+    if not user:
+        abort(404)
+    return jsonify(user.to_dict())
