@@ -22,15 +22,18 @@ if getenv("AUTH_TYPE") == "basic_auth":
 else:
     auth = Auth()
 
+
 @app.errorhandler(401)
 def unauthorized(error):
     """Return a JSON response for 401 unauthorized errors."""
     return jsonify({"error": "Unauthorized"}), 401
 
+
 @app.errorhandler(403)
 def forbidden(error):
     """Return a JSON response for 403 forbidden errors."""
     return jsonify({"error": "Forbidden"}), 403
+
 
 @app.before_request
 def before_request():
@@ -49,11 +52,13 @@ def before_request():
     if auth.current_user(request) is None:
         abort(403)
 
+
 @app.route('/api/v1/status')
 @app.route('/api/v1/status/')
 def status():
     """Return the status of the API."""
     return jsonify({"status": "OK"})
+
 
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
