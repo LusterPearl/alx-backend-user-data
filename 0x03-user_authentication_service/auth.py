@@ -9,11 +9,12 @@ from sqlalchemy.orm.exc import NoResultFound
 import bcrypt
 import uuid
 
-
 def _hash_password(password: str) -> bytes:
     """Hashes a password with bcrypt and returns the hashed password as bytes.
+
     Args:
         password (str): The password to hash.
+
     Returns:
         bytes: The hashed password.
     """
@@ -23,6 +24,7 @@ def _hash_password(password: str) -> bytes:
 
 def _generate_uuid() -> str:
     """Generates a new UUID and returns it as a string.
+
     Returns:
         str: The string representation of the UUID.
     """
@@ -37,8 +39,10 @@ class Auth:
 
     def _hash_password(self, password: str) -> bytes:
         """Hashes a password with bcrypt and returns the hashed password as bytes.
+
         Args:
             password (str): The password to hash.
+
         Returns:
             bytes: The hashed password.
         """
@@ -48,11 +52,14 @@ class Auth:
 
     def register_user(self, email: str, password: str) -> User:
         """Registers a new user with the given email and password.
+
         Args:
             email (str): The user's email.
             password (str): The user's password.
+
         Returns:
             User: The newly created user.
+
         Raises:
             ValueError: If the user already exists.
         """
@@ -66,9 +73,11 @@ class Auth:
 
     def valid_login(self, email: str, password: str) -> bool:
         """Validates a user's login credentials.
+
         Args:
             email (str): The user's email.
             password (str): The user's password.
+
         Returns:
             bool: True if the credentials are valid, False otherwise.
         """
@@ -77,3 +86,20 @@ class Auth:
             return bcrypt.checkpw(password.encode(), user.hashed_password)
         except NoResultFound:
             return False
+
+    def create_session(self, email: str) -> str:
+        """Creates a new session for the user with the given email.
+
+        Args:
+            email (str): The user's email.
+
+        Returns:
+            str: The session ID if the user is found, None otherwise.
+        """
+        try:
+            user = self._db.find_user_by(email=email)
+            session_id = _generate_uuid()
+            self._db.update_user(user.id, session_id=session_id)
+            return session_id
+        except NoResultFound:
+            return None

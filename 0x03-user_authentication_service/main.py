@@ -10,6 +10,5 @@ auth = Auth()
 
 auth.register_user(email, password)
 
-print(auth.valid_login(email, password))  # Expected output: True
-print(auth.valid_login(email, "WrongPwd"))  # Expected output: False
-print(auth.valid_login("unknown@email", password))  # Expected output: False
+print(auth.create_session(email))  # Should print a new session ID
+print(auth.create_session("unknown@email.com"))  # Should print None
