@@ -9,6 +9,20 @@ from sqlalchemy.orm.exc import NoResultFound
 import bcrypt
 
 
+def _hash_password(password: str) -> bytes:
+    """Hashes a password with bcrypt and returns the hashed password as bytes.
+
+    Args:
+        password (str): The password to hash.
+
+    Returns:
+        bytes: The hashed password.
+    """
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password.encode(), salt)
+    return hashed
+
+
 class Auth:
     """Auth class to interact with the authentication database.
     """
