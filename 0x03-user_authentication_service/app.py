@@ -5,14 +5,11 @@ Basic Flask app
 
 from flask import Flask, request, jsonify, make_response, abort
 from auth import Auth
-from sqlalchemy.exc import InvalidRequestError
-from sqlalchemy.orm.exc import NoResultFound
-from werkzeug.security import check_password_hash
-import uuid
 import logging
 
-
 app = Flask(__name__)
+
+logging.basicConfig(level=logging.DEBUG)
 
 AUTH = Auth()
 
@@ -60,10 +57,11 @@ def login():
             logging.debug(f"Failed to create session for email: {email}")
             abort(401)
 
-        logging.debug(f"Login successful for email: {email},
-                      session_id: {session_id}")
-        response = make_response(jsonify({"email": email,
-                                 "message": "logged in"}))
+        logging.debug(
+                      f"Login successful for email: {email}, session_id: {session_id}"
+                     )
+        response = make_response(jsonify({"email": email, "message": "logged in"}
+                                ))
         response.set_cookie('session_id', session_id)
         return response
     except Exception as e:
