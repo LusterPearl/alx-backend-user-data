@@ -9,6 +9,7 @@ from sqlalchemy.orm.exc import NoResultFound
 import bcrypt
 import uuid
 
+
 def _hash_password(password: str) -> bytes:
     """Hashes a password with bcrypt and returns the hashed password as bytes.
 
@@ -22,6 +23,7 @@ def _hash_password(password: str) -> bytes:
     hashed = bcrypt.hashpw(password.encode(), salt)
     return hashed
 
+
 def _generate_uuid() -> str:
     """Generates a new UUID and returns it as a string.
 
@@ -29,6 +31,7 @@ def _generate_uuid() -> str:
         str: The string representation of the UUID.
     """
     return str(uuid.uuid4())
+
 
 class Auth:
     """Auth class to interact with the authentication database.
@@ -38,14 +41,14 @@ class Auth:
         self._db = DB()
 
     def _hash_password(self, password: str) -> bytes:
-        """Hashes a password with bcrypt and returns the hashed password as bytes.
+        """Hashes a password with bcrypt and returns the hashed passwd as byt.
 
         Args:
             password (str): The password to hash.
 
         Returns:
             bytes: The hashed password.
-        """
+            """
         salt = bcrypt.gensalt()
         hashed = bcrypt.hashpw(password.encode(), salt)
         return hashed
