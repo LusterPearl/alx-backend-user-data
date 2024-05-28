@@ -5,11 +5,14 @@ Basic Flask app
 
 from flask import Flask, request, jsonify, make_response, abort
 from auth import Auth
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
+from werkzeug.security import check_password_hash
+import uuid
 import logging
 
-app = Flask(__name__)
 
-logging.basicConfig(level=logging.DEBUG)
+app = Flask(__name__)
 
 AUTH = Auth()
 
@@ -34,7 +37,7 @@ def users():
         return jsonify({"email": user.email, "message": "user created"}), 200
     except ValueError:
         return jsonify({"message": "email already registered"}), 400
-
+    
 
 @app.route("/sessions", methods=["POST"])
 def login():
