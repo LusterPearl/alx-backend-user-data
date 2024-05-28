@@ -106,3 +106,17 @@ class Auth:
             return session_id
         except NoResultFound:
             return None
+        
+    def get_user(self, email: str) -> User:
+        """Retrieves a user by email.
+
+        Args:
+            email (str): The user's email.
+
+        Returns:
+            User: The user object if found, None otherwise.
+        """
+        try:
+            return self._db.find_user_by(email=email)
+        except NoResultFound:
+            return None
