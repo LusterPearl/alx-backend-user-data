@@ -57,11 +57,8 @@ def login():
             logging.debug(f"Failed to create session for email: {email}")
             abort(401)
 
-        logging.debug(
-                      f"Login successful for email: {email}, session_id: {session_id}"
-                     )
-        response = make_response(jsonify({"email": email, "message": "logged in"}
-                                ))
+        logging.debug(f"Login successful for email: {email}, session_id: {session_id}")
+        response = make_response(jsonify({"email": email, "message": "logged in"}))
         response.set_cookie('session_id', session_id)
         return response
     except Exception as e:
