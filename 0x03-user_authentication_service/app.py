@@ -37,7 +37,7 @@ def users():
         return jsonify({"email": user.email, "message": "user created"}), 200
     except ValueError:
         return jsonify({"message": "email already registered"}), 400
-    
+
 
 @app.route("/sessions", methods=["POST"])
 def login():
@@ -60,13 +60,16 @@ def login():
             logging.debug(f"Failed to create session for email: {email}")
             abort(401)
 
-        logging.debug(f"Login successful for email: {email}, session_id: {session_id}")
-        response = make_response(jsonify({"email": email, "message": "logged in"}))
+        logging.debug(f"Login successful for email: {email},
+                      session_id: {session_id}")
+        response = make_response(jsonify({"email": email,
+                                 "message": "logged in"}))
         response.set_cookie('session_id', session_id)
         return response
     except Exception as e:
         logging.error(f"Error during login for email: {email}: {e}")
         abort(500)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="5000")
