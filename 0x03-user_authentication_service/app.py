@@ -9,6 +9,7 @@ from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.security import check_password_hash
 import uuid
+import logging
 
 
 app = Flask(__name__)
@@ -47,22 +48,25 @@ def login():
     if not email or not password:
         abort(401)
 
+    logging.debug(f"Attempting login for email: {email}")
+
     try:
-        user = AUTH.get_user(email)
-    except NoResultFound:
-        abort(401)
+        if not AUTH.valid_login(email, password):
+            logging.debug(f"Invalid login for email: {email}")
+            abort(401)
 
-    if not check_password_hash(user.hashed_password, password):
-        abort(401)
+        session_id = AUTH.create_session(email)
+        if not session_id:
+            logging.debug(f"Failed to create session for email: {email}")
+            abort(401)
 
-    session_id = str(uuid.uuid4())
-    user.session_id = session_id
-    AUTH.update_user(user.id, session_id=session_id)
-
-    response = make_response(jsonify({"email": email, "message": "logged in"}))
-    response.set_cookie('session_id', session_id)
-    return response
-
+        logging.debug(f"Login successful for email: {email}, session_id: {session_id}")
+        response = make_response(jsonify({"email": email, "message": "logged in"}))
+        response.set_cookie('session_id', session_id)
+        return response
+    except Exception as e:
+        logging.error(f"Error during login for email: {email}: {e}")
+        abort(500)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="5000")
