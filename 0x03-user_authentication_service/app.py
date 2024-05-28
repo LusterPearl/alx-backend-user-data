@@ -3,7 +3,7 @@
 Basic Flask app
 """
 
-from flask import Flask, request, jsonify, make_response, abort
+from flask import Flask, request, jsonify, make_response, abort, redirect
 from auth import Auth
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
