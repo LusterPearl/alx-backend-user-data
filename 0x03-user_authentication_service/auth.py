@@ -146,7 +146,7 @@ class Auth:
             self._db.save(user)
         except NoResultFound:
             raise ValueError("Invalid reset token")
-        
+
     def _hash_password(self, password: str) -> bytes:
         """Hashes a password with bcrypt and returns as bytes."""
         salt = bcrypt.gensalt()
