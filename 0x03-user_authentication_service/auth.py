@@ -12,7 +12,7 @@ import logging
 
 
 def _hash_password(password: str) -> bytes:
-    """Hashes a password with bcrypt and returns the hashed password as bytes.
+    """Hashes a passwd with bcrypt and returns d hashed passwd bytes.
 
     Args:
         password (str): The password to hash.
@@ -148,7 +148,9 @@ class Auth:
             raise ValueError("Invalid reset token")
 
         hashed_password = self._hash_password(password)
-        self._db.update_user(user.id, hashed_password=hashed_password, reset_token=None)
+        self._db.update_user(user.id,
+                             hashed_password=hashed_password,
+                             reset_token=None)
 
     def _hash_password(self, password: str) -> bytes:
         """Hashes a password with bcrypt and returns as bytes."""
