@@ -10,20 +10,26 @@ BASE_URL = "http://127.0.0.1:5000"
 
 def register_user(email: str, password: str) -> None:
     """Register a new user."""
-    response = requests.post(f"{BASE_URL}/users", data={'email': email, 'password': password})
+    url = f"{BASE_URL}/users"
+    data = {'email': email, 'password': password}
+    response = requests.post(url, data=data)
     assert response.status_code == 200
     assert response.json() == {"email": email, "message": "user created"}
 
 
 def log_in_wrong_password(email: str, password: str) -> None:
     """Attempt to log in with the wrong password."""
-    response = requests.post(f"{BASE_URL}/sessions", data={'email': email, 'password': password})
+    url = f"{BASE_URL}/sessions"
+    data = {'email': email, 'password': password}
+    response = requests.post(url, data=data)
     assert response.status_code == 401
 
 
 def log_in(email: str, password: str) -> str:
     """Log in with the correct password and return session ID."""
-    response = requests.post(f"{BASE_URL}/sessions", data={'email': email, 'password': password})
+    url = f"{BASE_URL}/sessions"
+    data = {'email': email, 'password': password}
+    response = requests.post(url, data=data)
     assert response.status_code == 200
     assert response.json() == {"email": email, "message": "logged in"}
     return response.cookies.get('session_id')
@@ -58,7 +64,9 @@ def reset_password_token(email: str) -> str:
 
 def update_password(email: str, reset_token: str, new_password: str) -> None:
     """Update the password using the reset token."""
-    response = requests.put(f"{BASE_URL}/reset_password", data={'email': email, 'reset_token': reset_token, 'new_password': new_password})
+    url = f"{BASE_URL}/reset_password"
+    data = {'email': email, 'reset_token': reset_token, 'new_password': new_password}
+    response = requests.put(url, data=data)
     assert response.status_code == 200
     assert response.json() == {"email": email, "message": "Password updated"}
 
